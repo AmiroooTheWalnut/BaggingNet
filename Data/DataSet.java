@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Amir72c
  */
-public class DataSet implements Serializable{
+public class DataSet implements Serializable {
 
     public int caseIndex;
     public int eventIndex;
@@ -37,7 +37,7 @@ public class DataSet implements Serializable{
             output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(tempIndex).staticTransactions, myFullCases.get(tempIndex).dynamicTransactions));
             indexes.remove(randomIndex);
         }
-        output.myTimedFullCases=DataSetProcessor.extractTimedFullCases(output.myFullCases);
+        output.myTimedFullCases = DataSetProcessor.extractTimedFullCases(output.myFullCases);
         return output;
     }
 
@@ -52,11 +52,52 @@ public class DataSet implements Serializable{
                 output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(i).staticTransactions, myFullCases.get(i).dynamicTransactions));
             }
         } else {
-            for (int i = myFullCases.size()-1; i > Math.round(((float) (100 - percent) / 100f) * myFullCases.size()); i--) {
+            for (int i = myFullCases.size() - 1; i > Math.round(((float) (100 - percent) / 100f) * myFullCases.size()); i--) {
                 output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(i).staticTransactions, myFullCases.get(i).dynamicTransactions));
             }
         }
-        output.myTimedFullCases=DataSetProcessor.extractTimedFullCases(output.myFullCases);
+        output.myTimedFullCases = DataSetProcessor.extractTimedFullCases(output.myFullCases);
+        return output;
+    }
+
+    private DataSet linearSample(double startPrecent, double endPercent, boolean timeSorted) {
+        DataSet output = new DataSet();
+        output.caseIndex = caseIndex;
+        output.eventIndex = eventIndex;
+        output.timeIndex = timeIndex;
+        output.header = header;
+        if (timeSorted == false) {
+            for (int i = (int) (((float) startPrecent / 100f) * myFullCases.size()); i < ((float) endPercent / 100f) * myFullCases.size(); i++) {
+                output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(i).staticTransactions, myFullCases.get(i).dynamicTransactions));
+            }
+        }else{
+            for (int i = (int) (((float) startPrecent / 100f) * myFullCases.size()); i < ((float) endPercent / 100f) * myFullCases.size(); i++) {
+                output.myFullCases.add(new FullCase(timeIndex, myTimedFullCases.get(i).staticTransactions, myTimedFullCases.get(i).dynamicTransactions));
+            }
+        }
+        output.myTimedFullCases = DataSetProcessor.extractTimedFullCases(output.myFullCases);
+        return output;
+    }
+
+    public DataSet[] randomSubSamples(double percent, int numGroups) {
+        DataSet output[] = new DataSet[numGroups];
+        for (int g = 0; g < numGroups; g++) {
+            output[g] = randomSample(percent / numGroups);
+        }
+        return output;
+    }
+
+    public DataSet[] linearSubSamples(double percent, int numGroups, boolean fromEnd, boolean timeSorted) {
+        DataSet output[] = new DataSet[numGroups];
+        if (fromEnd == false) {
+            for (int g = 0; g < numGroups; g++) {
+                output[g] = linearSample((percent / numGroups) * g, (percent / numGroups) * (g + 1), timeSorted);
+            }
+        } else {
+            for (int g = 0; g < numGroups; g++) {
+                output[g] = linearSample(100 - (percent / numGroups) * (g + 1), 100 - (percent / numGroups) * g, timeSorted);
+            }
+        }
         return output;
     }
 }

@@ -27,90 +27,177 @@ public class CaseDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         myDataSet = dataSet;
-        setStaticData(myDataSet);
+        setStaticData(myDataSet, jCheckBox1.isSelected());
     }
 
-    private void setStaticData(DataSet dataSet) {
+    private void setStaticData(DataSet dataSet, boolean isSorted) {
         int numRows = 0;
-        for (int i = 0; i < dataSet.myFullCases.size(); i++) {
-            for (int j = 0; j < dataSet.myFullCases.get(i).staticTransactions.size(); j++) {
+        if (isSorted == false) {
+            for (int i = 0; i < dataSet.myFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myFullCases.get(i).staticTransactions.size(); j++) {
+                    numRows = numRows + 1;
+                }
                 numRows = numRows + 1;
             }
-            numRows = numRows + 1;
-        }
-        String data[][] = new String[numRows][dataSet.header.features.size()+1];
-        String IDs[][]=new String[numRows][1];
-        int rowCounter = 0;
-        for (int i = 0; i < dataSet.myFullCases.size(); i++) {
-            for (int j = 0; j < dataSet.myFullCases.get(i).staticTransactions.size(); j++) {
-                IDs[rowCounter][0]=String.valueOf(dataSet.myFullCases.get(i).staticTransactions.get(j).indexId);
+            String data[][] = new String[numRows][dataSet.header.features.size() + 1];
+            String IDs[][] = new String[numRows][1];
+            int rowCounter = 0;
+            for (int i = 0; i < dataSet.myFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myFullCases.get(i).staticTransactions.size(); j++) {
+                    IDs[rowCounter][0] = String.valueOf(dataSet.myFullCases.get(i).staticTransactions.get(j).indexId);
 //                IDs[rowCounter][0]=dataSet.myFullCases.get(i).staticTransactions.get(j).nextEventName;
-                for (int k = 0; k < dataSet.myFullCases.get(i).staticTransactions.get(j).data.length; k++) {
-                    data[rowCounter][k] = dataSet.myFullCases.get(i).staticTransactions.get(j).data[k];
+                    for (int k = 0; k < dataSet.myFullCases.get(i).staticTransactions.get(j).data.length; k++) {
+                        data[rowCounter][k] = dataSet.myFullCases.get(i).staticTransactions.get(j).data[k];
+                    }
+                    data[rowCounter][dataSet.myFullCases.get(i).staticTransactions.get(j).data.length] = String.valueOf(dataSet.myFullCases.get(i).staticTransactions.get(j).duration);
+                    rowCounter = rowCounter + 1;
                 }
-                data[rowCounter][dataSet.myFullCases.get(i).staticTransactions.get(j).data.length]=String.valueOf(dataSet.myFullCases.get(i).staticTransactions.get(j).duration);
+                for (int k = 0; k < dataSet.header.features.size(); k++) {
+                    data[rowCounter][k] = "~";
+                }
                 rowCounter = rowCounter + 1;
             }
-            for (int k = 0; k < dataSet.header.features.size(); k++) {
-                data[rowCounter][k] = "~";
-            }
-            rowCounter = rowCounter + 1;
-        }
-        String headers[] = new String[dataSet.header.features.size()+1];
-        for (int i = 0; i < dataSet.header.features.size(); i++) {
-            headers[i] = dataSet.header.features.get(i).name;
-        }
-        headers[dataSet.header.features.size()]="Duration";
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(data, headers));
-        String temporaryTypes[][] = new String[1][dataSet.header.features.size()];
-        for (int i = 0; i < dataSet.header.features.size(); i++) {
-            temporaryTypes[0][i] = dataSet.header.features.get(i).type;
-        }
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(temporaryTypes, headers));
-        String IDHeader[]=new String[1];
-        IDHeader[0]="ID";
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(IDs, IDHeader));
-    }
 
-    private void setDynamicData(DataSet dataSet) {
-        int numRows = 0;
-        for (int i = 0; i < dataSet.myFullCases.size(); i++) {
-            for (int j = 0; j < dataSet.myFullCases.get(i).dynamicTransactions.size(); j++) {
+            String headers[] = new String[dataSet.header.features.size() + 1];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                headers[i] = dataSet.header.features.get(i).name;
+            }
+            headers[dataSet.header.features.size()] = "Duration";
+            jTable2.setModel(new javax.swing.table.DefaultTableModel(data, headers));
+            String temporaryTypes[][] = new String[1][dataSet.header.features.size()];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                temporaryTypes[0][i] = dataSet.header.features.get(i).type;
+            }
+            jTable1.setModel(new javax.swing.table.DefaultTableModel(temporaryTypes, headers));
+            String IDHeader[] = new String[1];
+            IDHeader[0] = "ID";
+            jTable3.setModel(new javax.swing.table.DefaultTableModel(IDs, IDHeader));
+
+        } else {
+            for (int i = 0; i < dataSet.myTimedFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myTimedFullCases.get(i).staticTransactions.size(); j++) {
+                    numRows = numRows + 1;
+                }
                 numRows = numRows + 1;
             }
-            numRows = numRows + 1;
-        }
-        String data[][] = new String[numRows][dataSet.header.features.size()+1];
-        String IDs[][]=new String[numRows][1];
-        int rowCounter = 0;
-        for (int i = 0; i < dataSet.myFullCases.size(); i++) {
-            for (int j = 0; j < dataSet.myFullCases.get(i).dynamicTransactions.size(); j++) {
-                IDs[rowCounter][0]=String.valueOf(dataSet.myFullCases.get(i).dynamicTransactions.get(j).indexId);
-                for (int k = 0; k < dataSet.myFullCases.get(i).dynamicTransactions.get(j).data.length; k++) {
-                    data[rowCounter][k] = dataSet.myFullCases.get(i).dynamicTransactions.get(j).data[k];
+            String data[][] = new String[numRows][dataSet.header.features.size() + 1];
+            String IDs[][] = new String[numRows][1];
+            int rowCounter = 0;
+            for (int i = 0; i < dataSet.myTimedFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myTimedFullCases.get(i).staticTransactions.size(); j++) {
+                    IDs[rowCounter][0] = String.valueOf(dataSet.myTimedFullCases.get(i).staticTransactions.get(j).indexId);
+//                IDs[rowCounter][0]=dataSet.myFullCases.get(i).staticTransactions.get(j).nextEventName;
+                    for (int k = 0; k < dataSet.myTimedFullCases.get(i).staticTransactions.get(j).data.length; k++) {
+                        data[rowCounter][k] = dataSet.myTimedFullCases.get(i).staticTransactions.get(j).data[k];
+                    }
+                    data[rowCounter][dataSet.myTimedFullCases.get(i).staticTransactions.get(j).data.length] = String.valueOf(dataSet.myTimedFullCases.get(i).staticTransactions.get(j).duration);
+                    rowCounter = rowCounter + 1;
                 }
-                data[rowCounter][dataSet.myFullCases.get(i).dynamicTransactions.get(j).data.length]=String.valueOf(dataSet.myFullCases.get(i).dynamicTransactions.get(j).duration);
+                for (int k = 0; k < dataSet.header.features.size(); k++) {
+                    data[rowCounter][k] = "~";
+                }
                 rowCounter = rowCounter + 1;
             }
-            for (int k = 0; k < dataSet.header.features.size(); k++) {
-                data[rowCounter][k] = "~";
+
+            String headers[] = new String[dataSet.header.features.size() + 1];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                headers[i] = dataSet.header.features.get(i).name;
             }
-            rowCounter = rowCounter + 1;
+            headers[dataSet.header.features.size()] = "Duration";
+            jTable2.setModel(new javax.swing.table.DefaultTableModel(data, headers));
+            String temporaryTypes[][] = new String[1][dataSet.header.features.size()];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                temporaryTypes[0][i] = dataSet.header.features.get(i).type;
+            }
+            jTable1.setModel(new javax.swing.table.DefaultTableModel(temporaryTypes, headers));
+            String IDHeader[] = new String[1];
+            IDHeader[0] = "ID";
+            jTable3.setModel(new javax.swing.table.DefaultTableModel(IDs, IDHeader));
+
         }
-        String headers[] = new String[dataSet.header.features.size()+1];
-        for (int i = 0; i < dataSet.header.features.size(); i++) {
-            headers[i] = dataSet.header.features.get(i).name;
+    }
+
+    private void setDynamicData(DataSet dataSet, boolean isSorted) {
+        if (isSorted == false) {
+            int numRows = 0;
+            for (int i = 0; i < dataSet.myFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myFullCases.get(i).dynamicTransactions.size(); j++) {
+                    numRows = numRows + 1;
+                }
+                numRows = numRows + 1;
+            }
+            String data[][] = new String[numRows][dataSet.header.features.size() + 1];
+            String IDs[][] = new String[numRows][1];
+            int rowCounter = 0;
+            for (int i = 0; i < dataSet.myFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myFullCases.get(i).dynamicTransactions.size(); j++) {
+                    IDs[rowCounter][0] = String.valueOf(dataSet.myFullCases.get(i).dynamicTransactions.get(j).indexId);
+                    for (int k = 0; k < dataSet.myFullCases.get(i).dynamicTransactions.get(j).data.length; k++) {
+                        data[rowCounter][k] = dataSet.myFullCases.get(i).dynamicTransactions.get(j).data[k];
+                    }
+                    data[rowCounter][dataSet.myFullCases.get(i).dynamicTransactions.get(j).data.length] = String.valueOf(dataSet.myFullCases.get(i).dynamicTransactions.get(j).duration);
+                    rowCounter = rowCounter + 1;
+                }
+                for (int k = 0; k < dataSet.header.features.size(); k++) {
+                    data[rowCounter][k] = "~";
+                }
+                rowCounter = rowCounter + 1;
+            }
+            String headers[] = new String[dataSet.header.features.size() + 1];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                headers[i] = dataSet.header.features.get(i).name;
+            }
+            headers[dataSet.header.features.size()] = "Duration";
+            jTable2.setModel(new javax.swing.table.DefaultTableModel(data, headers));
+            String temporaryTypes[][] = new String[1][dataSet.header.features.size()];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                temporaryTypes[0][i] = dataSet.header.features.get(i).type;
+            }
+            jTable1.setModel(new javax.swing.table.DefaultTableModel(temporaryTypes, headers));
+            String IDHeader[] = new String[1];
+            IDHeader[0] = "ID";
+            jTable3.setModel(new javax.swing.table.DefaultTableModel(IDs, IDHeader));
+        } else {
+            int numRows = 0;
+            for (int i = 0; i < dataSet.myTimedFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myTimedFullCases.get(i).dynamicTransactions.size(); j++) {
+                    numRows = numRows + 1;
+                }
+                numRows = numRows + 1;
+            }
+            String data[][] = new String[numRows][dataSet.header.features.size() + 1];
+            String IDs[][] = new String[numRows][1];
+            int rowCounter = 0;
+            for (int i = 0; i < dataSet.myTimedFullCases.size(); i++) {
+                for (int j = 0; j < dataSet.myTimedFullCases.get(i).dynamicTransactions.size(); j++) {
+                    IDs[rowCounter][0] = String.valueOf(dataSet.myTimedFullCases.get(i).dynamicTransactions.get(j).indexId);
+                    for (int k = 0; k < dataSet.myTimedFullCases.get(i).dynamicTransactions.get(j).data.length; k++) {
+                        data[rowCounter][k] = dataSet.myTimedFullCases.get(i).dynamicTransactions.get(j).data[k];
+                    }
+                    data[rowCounter][dataSet.myTimedFullCases.get(i).dynamicTransactions.get(j).data.length] = String.valueOf(dataSet.myTimedFullCases.get(i).dynamicTransactions.get(j).duration);
+                    rowCounter = rowCounter + 1;
+                }
+                for (int k = 0; k < dataSet.header.features.size(); k++) {
+                    data[rowCounter][k] = "~";
+                }
+                rowCounter = rowCounter + 1;
+            }
+            String headers[] = new String[dataSet.header.features.size() + 1];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                headers[i] = dataSet.header.features.get(i).name;
+            }
+            headers[dataSet.header.features.size()] = "Duration";
+            jTable2.setModel(new javax.swing.table.DefaultTableModel(data, headers));
+            String temporaryTypes[][] = new String[1][dataSet.header.features.size()];
+            for (int i = 0; i < dataSet.header.features.size(); i++) {
+                temporaryTypes[0][i] = dataSet.header.features.get(i).type;
+            }
+            jTable1.setModel(new javax.swing.table.DefaultTableModel(temporaryTypes, headers));
+            String IDHeader[] = new String[1];
+            IDHeader[0] = "ID";
+            jTable3.setModel(new javax.swing.table.DefaultTableModel(IDs, IDHeader));
         }
-        headers[dataSet.header.features.size()]="Duration";
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(data, headers));
-        String temporaryTypes[][] = new String[1][dataSet.header.features.size()];
-        for (int i = 0; i < dataSet.header.features.size(); i++) {
-            temporaryTypes[0][i] = dataSet.header.features.get(i).type;
-        }
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(temporaryTypes, headers));
-        String IDHeader[]=new String[1];
-        IDHeader[0]="ID";
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(IDs, IDHeader));
+
     }
 
     /**
@@ -132,6 +219,7 @@ public class CaseDialog extends javax.swing.JDialog {
         jRadioButton2 = new javax.swing.JRadioButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -215,16 +303,26 @@ public class CaseDialog extends javax.swing.JDialog {
         ));
         jScrollPane3.setViewportView(jTable3);
 
+        jCheckBox1.setText("Sorted by date?");
+        jCheckBox1.setToolTipText("");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBox1)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -243,6 +341,8 @@ public class CaseDialog extends javax.swing.JDialog {
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jCheckBox1)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -253,18 +353,29 @@ public class CaseDialog extends javax.swing.JDialog {
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
 //        System.out.println("State changed!");
-        setStaticData(myDataSet);
+        setStaticData(myDataSet, jCheckBox1.isSelected());
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
         // TODO add your handling code here:
 //        System.out.println("State changed!");
-        setDynamicData(myDataSet);
+        setDynamicData(myDataSet, jCheckBox1.isSelected());
     }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+        if(jRadioButton1.isSelected())
+        {
+            setStaticData(myDataSet, jCheckBox1.isSelected());
+        }else{
+            setDynamicData(myDataSet, jCheckBox1.isSelected());
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;

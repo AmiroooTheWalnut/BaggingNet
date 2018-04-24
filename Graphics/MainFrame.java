@@ -9,6 +9,7 @@ import Data.AllData;
 import Data.DataSet;
 import Data.DataSetProcessor;
 import Data.RawDataReader;
+import MainModel.BaggingNet;
 import MainModel.SimpleNet;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -85,23 +86,20 @@ public class MainFrame extends javax.swing.JFrame {
         jCheckBox3 = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
         jSpinner3 = new javax.swing.JSpinner();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jSpinner4 = new javax.swing.JSpinner();
-        jLabel9 = new javax.swing.JLabel();
-        testBaggingModelSlider = new javax.swing.JSlider();
-        testBaggingModelButton = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
         trainBaggingNetButton = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         openBaggingNetButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        trainPercentBaggingNetSpinner = new javax.swing.JSpinner();
+        testBaggingNetButton = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBox2 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Load data"));
 
-        loadDataButton.setText("load dataset");
+        loadDataButton.setText("Load dataset");
         loadDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadDataButtonActionPerformed(evt);
@@ -359,38 +357,38 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(isRandomTrainSimpleNetCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(isFromBeginSimpleNetTrainCheckBox)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(trainPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(trainPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(trainSimpleNetButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(openSimpleModelButton)
                         .addGap(18, 18, 18)
-                        .addComponent(testSimpleNetButton))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(isRandomTrainSimpleNetCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(isFromBeginSimpleNetTrainCheckBox)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(testSimpleNetButton)))
+                .addContainerGap(178, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
                     .addComponent(trainPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(trainSimpleNetButton)
-                    .addComponent(jLabel6)
-                    .addComponent(openSimpleModelButton)
-                    .addComponent(testSimpleNetButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
                     .addComponent(isRandomTrainSimpleNetCheckBox)
                     .addComponent(isFromBeginSimpleNetTrainCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(testSimpleNetButton)
+                    .addComponent(openSimpleModelButton)
+                    .addComponent(trainSimpleNetButton)
+                    .addComponent(jLabel6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -398,80 +396,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         jCheckBox3.setSelected(true);
         jCheckBox3.setText("Sort by first event's date");
-        jCheckBox3.setEnabled(false);
 
-        jLabel7.setText("Number of folds:");
-        jLabel7.setEnabled(false);
+        jLabel7.setText("Number of folds/nets:");
 
         jSpinner3.setModel(new javax.swing.SpinnerNumberModel(5, 2, null, 1));
-        jSpinner3.setEnabled(false);
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Test"));
-        jPanel6.setEnabled(false);
-
-        jLabel8.setText("Test percent:");
-        jLabel8.setEnabled(false);
-
-        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(20, 1, 99, 1));
-        jSpinner4.setEnabled(false);
-
-        jLabel9.setText("Known transaction percent:");
-        jLabel9.setEnabled(false);
-
-        testBaggingModelSlider.setEnabled(false);
-
-        testBaggingModelButton.setText("Test");
-        testBaggingModelButton.setEnabled(false);
-
-        jLabel10.setText("50%");
-        jLabel10.setEnabled(false);
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(testBaggingModelButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel10)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(testBaggingModelSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(testBaggingModelSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(testBaggingModelButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         trainBaggingNetButton.setText("Train");
-        trainBaggingNetButton.setEnabled(false);
         trainBaggingNetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 trainBaggingNetButtonActionPerformed(evt);
@@ -479,12 +409,24 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jLabel11.setText("No model");
-        jLabel11.setEnabled(false);
 
         openBaggingNetButton.setText("Open model");
-        openBaggingNetButton.setEnabled(false);
 
-        jLabel3.setText("UNDER CONSTRUCTION");
+        jLabel3.setText("Train percent:");
+
+        trainPercentBaggingNetSpinner.setModel(new javax.swing.SpinnerNumberModel(70, 1, 100, 1));
+
+        testBaggingNetButton.setText("Test");
+
+        jCheckBox1.setText("Randomly drawn?");
+
+        jCheckBox2.setSelected(true);
+        jCheckBox2.setText("From beginning?");
+        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -494,32 +436,40 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox3)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(trainBaggingNetButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(openBaggingNetButton))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jCheckBox1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jCheckBox3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox2)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(trainPercentBaggingNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(trainBaggingNetButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(openBaggingNetButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(testBaggingNetButton))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(jCheckBox3)
-                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBox3)
+                    .addComponent(jLabel3)
+                    .addComponent(trainPercentBaggingNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBox1)
+                    .addComponent(jCheckBox2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSpinner3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -527,11 +477,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(trainBaggingNetButton)
                     .addComponent(jLabel11)
-                    .addComponent(openBaggingNetButton))
+                    .addComponent(openBaggingNetButton)
+                    .addComponent(testBaggingNetButton))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -555,9 +503,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -681,13 +629,22 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void openSimpleModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSimpleModelButtonActionPerformed
         // TODO add your handling code here:
-        ModelViewerDialog mvd = new ModelViewerDialog(this, true);
+        SimpleNetModelViewerDialog mvd = new SimpleNetModelViewerDialog(this, true);
         mvd.setVisible(true);
     }//GEN-LAST:event_openSimpleModelButtonActionPerformed
 
     private void trainBaggingNetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainBaggingNetButtonActionPerformed
         // TODO add your handling code here:
-        
+        allData.baggingNet = new BaggingNet();
+        DataSet sampledDataSet[];
+        if (isRandomTrainSimpleNetCheckBox.isSelected()) {
+            sampledDataSet = allData.dataSet.randomSubSamples((int) trainPercentSimpleNetSpinner.getValue(),(int)jSpinner3.getValue());
+            allData.baggingNet.trainNet(sampledDataSet);
+        }else{
+            sampledDataSet = allData.dataSet.linearSubSamples((int) trainPercentSimpleNetSpinner.getValue(), (int)jSpinner3.getValue(), !isFromBeginSimpleNetTrainCheckBox.isSelected(),jCheckBox3.isSelected());
+            allData.baggingNet.trainNet(sampledDataSet);
+        }
+        jLabel6.setText("Model created");
     }//GEN-LAST:event_trainBaggingNetButtonActionPerformed
 
     private void loadModelKryoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadModelKryoActionPerformed
@@ -760,6 +717,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void scenariosIllustrateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scenariosIllustrateActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_scenariosIllustrateActionPerformed
+
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     private SimpleNet loadSimpleModelSerializable(SimpleNet sn, String file_path, String file_name, String data_type) {
         FileInputStream f_in;
@@ -886,23 +847,20 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox isFromBeginSimpleNetTrainCheckBox;
     private javax.swing.JCheckBox isRandomTrainSimpleNetCheckBox;
     private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JSpinner jSpinner3;
-    private javax.swing.JSpinner jSpinner4;
     private javax.swing.JButton linksIllustrate;
     private javax.swing.JButton loadData;
     private javax.swing.JButton loadDataButton;
@@ -920,10 +878,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton saveModel;
     private javax.swing.JButton saveModelKryo;
     private javax.swing.JButton scenariosIllustrate;
-    private javax.swing.JButton testBaggingModelButton;
-    private javax.swing.JSlider testBaggingModelSlider;
+    private javax.swing.JButton testBaggingNetButton;
     private javax.swing.JButton testSimpleNetButton;
     private javax.swing.JButton trainBaggingNetButton;
+    private javax.swing.JSpinner trainPercentBaggingNetSpinner;
     private javax.swing.JSpinner trainPercentSimpleNetSpinner;
     private javax.swing.JButton trainSimpleNetButton;
     // End of variables declaration//GEN-END:variables

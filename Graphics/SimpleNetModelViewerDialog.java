@@ -12,14 +12,14 @@ import javax.swing.event.ListDataListener;
  *
  * @author Amir72c
  */
-public class ModelViewerDialog extends javax.swing.JDialog {
+public class SimpleNetModelViewerDialog extends javax.swing.JDialog {
 
     MainFrame myParent;
     
     /**
      * Creates new form ModelViewer
      */
-    public ModelViewerDialog(java.awt.Frame parent, boolean modal) {
+    public SimpleNetModelViewerDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         myParent = (MainFrame) parent;
