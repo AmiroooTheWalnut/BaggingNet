@@ -10,6 +10,7 @@ Weka used for this project, however, the source of weka required minor changes. 
 	protected Instances m_Instances;
 	
 To:
+	
 	/**
 	* The dataset header for the purposes of printing out a semi-intelligible
 	* model
