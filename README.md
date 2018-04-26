@@ -1,2 +1,2 @@
 # BaggingNet
-An application for process mining
+An application for process mining. This branch cotains the test datasets.
