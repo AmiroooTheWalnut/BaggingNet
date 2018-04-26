@@ -18,3 +18,8 @@ To:
 	public Instances m_Instances;
 	
 There is a compiled revised Weka in the Libs branch.
+
+How to setup:
+The "master" branch works as src folder. If you want to work with and IDE like netbeans, clone the "master" branch which should make a folder called "BaggingNet" with the sources inside. Rename the "BaggingNet" to "src" and use it in your IDE.
+The "Libs" branch is required by the application. You may provide dependancies as you wish but again remember the revision currently required by the application. Again clone it and rename "BaggingNet" to "Libs" or any other name you like.
+Finally, there is a "test" branch which consists the test datasets. Again clone it and rename "BaggingNet" to "TestData" or any other name you like.
