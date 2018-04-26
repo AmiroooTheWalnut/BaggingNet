@@ -45,12 +45,10 @@ public class Event implements Serializable{
             trainDataSet.setClass(trainDataSet.attribute("Output"));
             classifier = new NaiveBayes();
             classifier.buildClassifier(trainDataSet);
-            arffInternalHeader=((NaiveBayes)classifier).m_Instances.toString();//MANUAL WEKA BUILD FAILED
+            arffInternalHeader=((NaiveBayes)classifier).m_Instances.toString();//USING OF REVISED WEKA
         }else{
             classifier=null;
         }
-        
-        
     }
 
     public void gatherData() {
