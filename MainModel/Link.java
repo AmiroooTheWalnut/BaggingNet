@@ -17,8 +17,11 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import weka.clusterers.AbstractClusterer;
+import weka.clusterers.Canopy;
+import weka.clusterers.CascadeSimpleKMeans;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.EM;
+import weka.clusterers.XMeans;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 
@@ -26,7 +29,7 @@ import weka.core.converters.ArffLoader;
  *
  * @author Amir72c
  */
-public class Link implements Serializable{
+public class Link implements Serializable {
 
     public String name;
     public AbstractClusterer clusterer;
@@ -43,11 +46,21 @@ public class Link implements Serializable{
     public void trainLink(DataSet dataSet) throws Exception {
         Instances trainInstances = generateWekaDataSet(dataSet);
         if (myStaticData.size() > 50) {
-            clusterer = new EM();
-            ((EM) clusterer).setNumExecutionSlots(6);
-            ((EM) clusterer).setMaxIterations(10);
-            ((EM) clusterer).setMinStdDev(0.01);
-            ((EM) clusterer).setMaximumNumberOfClusters(20);
+            //Heavy algorithm
+//            clusterer = new EM();
+//            ((EM) clusterer).setNumExecutionSlots(6);
+//            ((EM) clusterer).setMaxIterations(10);
+//            ((EM) clusterer).setMinStdDev(0.01);
+//            ((EM) clusterer).setMaximumNumberOfClusters(20);
+
+            //Medium algorithm
+//            clusterer=new CascadeSimpleKMeans();
+//            ((CascadeSimpleKMeans) clusterer).setMaxNumClusters(20);
+//            ((CascadeSimpleKMeans) clusterer).setMinNumClusters(2);
+//            ((CascadeSimpleKMeans) clusterer).setRestarts(5);
+            
+            //Light algorithm
+            clusterer = new Canopy();
 
             clusterer.buildClusterer(trainInstances);
 
@@ -66,43 +79,34 @@ public class Link implements Serializable{
         checkAssignments();
         calculateCentroids(dataSet, trainInstances);
     }
-    
-    private void checkAssignments()
-    {
-        boolean isValid[]=new boolean[numClusters];
-        for(int i=0;i<isValid.length;i++)
-        {
-            isValid[i]=false;
+
+    private void checkAssignments() {
+        boolean isValid[] = new boolean[numClusters];
+        for (int i = 0; i < isValid.length; i++) {
+            isValid[i] = false;
         }
-        for(int i=0;i<assignments.length;i++)
-        {
-            isValid[(int)assignments[i]]=true;
+        for (int i = 0; i < assignments.length; i++) {
+            isValid[(int) assignments[i]] = true;
         }
-        boolean isCorrect=true;
-        for(int i=0;i<isValid.length;i++)
-        {
-            if(isValid[i]==false)
-            {
-                isCorrect=false;
+        boolean isCorrect = true;
+        for (int i = 0; i < isValid.length; i++) {
+            if (isValid[i] == false) {
+                isCorrect = false;
                 break;
             }
         }
-        if(isCorrect==false)
-        {
-            int newClusterIndices[]=new int[numClusters];
-            int tempNumClusters=0;
-            for(int i=0;i<isValid.length;i++)
-            {
-                if(isValid[i]==true)
-                {
-                    newClusterIndices[i]=tempNumClusters;
-                    tempNumClusters=tempNumClusters+1;
+        if (isCorrect == false) {
+            int newClusterIndices[] = new int[numClusters];
+            int tempNumClusters = 0;
+            for (int i = 0; i < isValid.length; i++) {
+                if (isValid[i] == true) {
+                    newClusterIndices[i] = tempNumClusters;
+                    tempNumClusters = tempNumClusters + 1;
                 }
             }
-            numClusters=tempNumClusters;
-            for(int i=0;i<assignments.length;i++)
-            {
-                assignments[i]=newClusterIndices[(int)assignments[i]];
+            numClusters = tempNumClusters;
+            for (int i = 0; i < assignments.length; i++) {
+                assignments[i] = newClusterIndices[(int) assignments[i]];
             }
         }
     }
@@ -137,7 +141,7 @@ public class Link implements Serializable{
                             }
                             center.data[f] = clusters[c].attribute(f_p).value(maxFreqIndex);
                         }
-                        center.duration=(long) clusters[c].attributeStats(clusters[c].attribute("Duration").index()).numericStats.mean;
+                        center.duration = (long) clusters[c].attributeStats(clusters[c].attribute("Duration").index()).numericStats.mean;
                         break;
                     }
                 }
