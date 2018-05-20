@@ -15,7 +15,7 @@ import javax.swing.event.ListDataListener;
 public class SimpleNetModelViewerDialog extends javax.swing.JDialog {
 
     MainFrame myParent;
-    
+
     /**
      * Creates new form ModelViewer
      */
@@ -23,47 +23,50 @@ public class SimpleNetModelViewerDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         myParent = (MainFrame) parent;
-        ListModel eventsList = new ListModel() {
-            @Override
-            public int getSize() {
-                return myParent.allData.simpleNet.events.size();
-            }
+        if (myParent.allData.simpleNet != null) {
+            ListModel eventsList = new ListModel() {
+                @Override
+                public int getSize() {
+                    return myParent.allData.simpleNet.events.size();
+                }
 
-            @Override
-            public Object getElementAt(int index) {
-                return myParent.allData.simpleNet.events.get(index).name;
-            }
+                @Override
+                public Object getElementAt(int index) {
+                    return myParent.allData.simpleNet.events.get(index).name;
+                }
 
-            @Override
-            public void addListDataListener(ListDataListener l) {
-            }
+                @Override
+                public void addListDataListener(ListDataListener l) {
+                }
 
-            @Override
-            public void removeListDataListener(ListDataListener l) {
-            }
-        };
-        jList1.setModel(eventsList);
-        
-        ListModel linksList = new ListModel() {
-            @Override
-            public int getSize() {
-                return myParent.allData.simpleNet.links.size();
-            }
+                @Override
+                public void removeListDataListener(ListDataListener l) {
+                }
+            };
+            jList1.setModel(eventsList);
 
-            @Override
-            public Object getElementAt(int index) {
-                return myParent.allData.simpleNet.links.get(index).name;
-            }
+            ListModel linksList = new ListModel() {
+                @Override
+                public int getSize() {
+                    return myParent.allData.simpleNet.links.size();
+                }
 
-            @Override
-            public void addListDataListener(ListDataListener l) {
-            }
+                @Override
+                public Object getElementAt(int index) {
+                    return myParent.allData.simpleNet.links.get(index).name;
+                }
 
-            @Override
-            public void removeListDataListener(ListDataListener l) {
-            }
-        };
-        jList2.setModel(linksList);
+                @Override
+                public void addListDataListener(ListDataListener l) {
+                }
+
+                @Override
+                public void removeListDataListener(ListDataListener l) {
+                }
+            };
+            jList2.setModel(linksList);
+        }
+
     }
 
     /**
@@ -86,11 +89,6 @@ public class SimpleNetModelViewerDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
@@ -100,11 +98,6 @@ public class SimpleNetModelViewerDialog extends javax.swing.JDialog {
 
         jLabel1.setText("Events:");
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList2ValueChanged(evt);
@@ -157,20 +150,20 @@ public class SimpleNetModelViewerDialog extends javax.swing.JDialog {
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         // TODO add your handling code here:
-        if(myParent.allData.simpleNet.events.get(jList1.getSelectedIndex()).classifier!=null)
-        {
-            jTextArea1.setText(myParent.allData.simpleNet.events.get(jList1.getSelectedIndex()).classifier.toString());
-        }else{
+        if (myParent.allData.simpleNet.events.get(jList1.getSelectedIndex()).classifier != null) {
+            jTextArea1.setText("Event name: " + myParent.allData.simpleNet.events.get(jList1.getSelectedIndex()).name + System.lineSeparator());
+            jTextArea1.append(myParent.allData.simpleNet.events.get(jList1.getSelectedIndex()).classifier.toString());
+        } else {
             jTextArea1.setText("No model created");
         }
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
         // TODO add your handling code here:
-        if(myParent.allData.simpleNet.links.get(jList2.getSelectedIndex()).clusterer!=null)
-        {
-            jTextArea1.setText(myParent.allData.simpleNet.links.get(jList2.getSelectedIndex()).clusterer.toString());
-        }else{
+        if (myParent.allData.simpleNet.links.get(jList2.getSelectedIndex()).clusterer != null) {
+            jTextArea1.setText("Link name: " + myParent.allData.simpleNet.links.get(jList2.getSelectedIndex()).name + System.lineSeparator());
+            jTextArea1.append(myParent.allData.simpleNet.links.get(jList2.getSelectedIndex()).clusterer.toString());
+        } else {
             jTextArea1.setText("No model created");
         }
     }//GEN-LAST:event_jList2ValueChanged

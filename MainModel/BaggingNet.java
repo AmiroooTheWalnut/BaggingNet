@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class BaggingNet implements Serializable {
 
     DataSet myDataSets[];
-    ArrayList<SimpleNet> nets = new ArrayList();
+    public ArrayList<SimpleNet> nets = new ArrayList();
     
     public void trainNet(DataSet dataSets[]) {
         myDataSets=dataSets;
