@@ -30,6 +30,21 @@ public class FullCase implements Comparable<FullCase>, Serializable{
         staticTransactions=passedStaticTransactions;
         dynamicTransactions=passedDynamicTransactions;
     }
+    
+    public FullCase deepClone()
+    {
+        FullCase output=new FullCase(timeIndex);
+        for(int i=0;i<staticTransactions.size();i++)
+        {
+            String tempData[]=new String[staticTransactions.get(i).data.length];
+            for(int j=0;j<staticTransactions.get(i).data.length;j++)
+            {
+                tempData[j]=staticTransactions.get(i).data[j];
+            }
+            output.staticTransactions.add(new StaticTransaction(staticTransactions.get(i).nextEventName,staticTransactions.get(i).indexId,staticTransactions.get(i).duration,tempData));
+        }
+        return output;
+    }
 
     @Override
     public int compareTo(FullCase other) {

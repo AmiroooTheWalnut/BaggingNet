@@ -100,4 +100,46 @@ public class DataSet implements Serializable {
         }
         return output;
     }
+    
+    public DataSet emptyClone()
+    {
+        DataSet output=new DataSet();
+        output.caseIndex=this.caseIndex;
+        output.eventIndex=this.eventIndex;
+        output.timeIndex=this.timeIndex;
+        output.header=this.header;
+        
+        return output;
+    }
+    
+    public DataSet deepClone()
+    {
+        DataSet output=new DataSet();
+        output.caseIndex=this.caseIndex;
+        output.eventIndex=this.eventIndex;
+        output.timeIndex=this.timeIndex;
+        output.header=this.header;
+        for(int i=0;i<this.myFullCases.size();i++)
+        {
+            output.myFullCases.add(this.myFullCases.get(i).deepClone());
+            output.myTimedFullCases.add(this.myTimedFullCases.get(i).deepClone());
+        }
+        return output;
+    }
+    
+    public DataSet deepClone(int startIndex,int endIndex)
+    {
+        DataSet output=new DataSet();
+        output.caseIndex=this.caseIndex;
+        output.eventIndex=this.eventIndex;
+        output.timeIndex=this.timeIndex;
+        output.header=this.header;
+        for(int i=startIndex;i<endIndex;i++)
+        {
+            output.myFullCases.add(this.myFullCases.get(i).deepClone());
+            output.myTimedFullCases.add(this.myTimedFullCases.get(i).deepClone());
+        }
+        return output;
+    }
+    
 }
