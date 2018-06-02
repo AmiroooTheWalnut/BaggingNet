@@ -315,7 +315,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Train percent:");
 
-        trainPercentSimpleNetSpinner.setModel(new javax.swing.SpinnerNumberModel(70, 1, 100, 1));
+        trainPercentSimpleNetSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(70.0f), Float.valueOf(0.1f), Float.valueOf(100.0f), Float.valueOf(0.1f)));
 
         isRandomTrainSimpleNetCheckBox.setSelected(true);
         isRandomTrainSimpleNetCheckBox.setText("Randomly drawn?");
@@ -372,7 +372,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(trainPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(trainPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(trainSimpleNetButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -431,7 +431,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Train percent:");
 
-        trainPercentBaggingNetSpinner.setModel(new javax.swing.SpinnerNumberModel(70, 1, 100, 1));
+        trainPercentBaggingNetSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(70.0f), Float.valueOf(0.1f), Float.valueOf(100.0f), Float.valueOf(0.1f)));
 
         testBaggingNetButton.setText("Test");
         testBaggingNetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -468,21 +468,24 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(trainPercentBaggingNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(trainPercentBaggingNetSpinner))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(numFoldsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(trainBaggingNetButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(openBaggingNetButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(testBaggingNetButton))
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numFoldsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(trainBaggingNetButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(openBaggingNetButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(testBaggingNetButton))
+                            .addComponent(jButton2))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -619,10 +622,10 @@ public class MainFrame extends javax.swing.JFrame {
         allData.simpleNet = new SimpleNet();
         DataSet sampledDataSet;
         if (isRandomTrainSimpleNetCheckBox.isSelected()) {
-            sampledDataSet = allData.dataSet.randomSample((int) trainPercentSimpleNetSpinner.getValue());
+            sampledDataSet = allData.dataSet.randomSample((float) trainPercentSimpleNetSpinner.getValue());
             allData.simpleNet.trainNet(sampledDataSet);
         } else {
-            sampledDataSet = allData.dataSet.linearSample((int) trainPercentSimpleNetSpinner.getValue(), !isFromBeginSimpleNetTrainCheckBox.isSelected());
+            sampledDataSet = allData.dataSet.linearSample((float) trainPercentSimpleNetSpinner.getValue(), !isFromBeginSimpleNetTrainCheckBox.isSelected());
             allData.simpleNet.trainNet(sampledDataSet);
         }
         jLabel6.setText("Model created");
@@ -665,10 +668,10 @@ public class MainFrame extends javax.swing.JFrame {
         allData.baggingNet = new BaggingNet();
         DataSet sampledDataSet[];
         if (isRandomTrainSimpleNetCheckBox.isSelected()) {
-            sampledDataSet = allData.dataSet.randomSubSamples((int) trainPercentSimpleNetSpinner.getValue(),(int)numFoldsSpinner.getValue());
+            sampledDataSet = allData.dataSet.randomSubSamples((float) trainPercentBaggingNetSpinner.getValue(),(int)numFoldsSpinner.getValue());
             allData.baggingNet.trainNet(sampledDataSet);
         }else{
-            sampledDataSet = allData.dataSet.linearSubSamples((int) trainPercentSimpleNetSpinner.getValue(), (int)numFoldsSpinner.getValue(), !isFromBeginSimpleNetTrainCheckBox.isSelected(),jCheckBox3.isSelected());
+            sampledDataSet = allData.dataSet.linearSubSamples((float) trainPercentBaggingNetSpinner.getValue(), (int)numFoldsSpinner.getValue(), !isFromBeginSimpleNetTrainCheckBox.isSelected(),jCheckBox3.isSelected());
             allData.baggingNet.trainNet(sampledDataSet);
         }
         jLabel6.setText("Model created");

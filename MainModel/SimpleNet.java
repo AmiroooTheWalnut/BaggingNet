@@ -16,7 +16,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.core.Instances;
@@ -26,7 +29,7 @@ import weka.core.converters.ArffLoader;
  *
  * @author Amir72c
  */
-public class SimpleNet implements Serializable{
+public class SimpleNet implements Serializable {
 
     DataSet myDataSet;
     public ArrayList<Event> events = new ArrayList();
@@ -224,23 +227,65 @@ public class SimpleNet implements Serializable{
         for (int i = 0; i < predictions.size(); i++) {
             predictions.set(i, predictFullCase(testData, predictions.get(i)));
         }
-        double predictedDurations[]=new double[predictions.size()];
+        double predictedDurations[] = new double[predictions.size()];
         for (int i = 0; i < predictions.size(); i++) {
-            predictedDurations[i]=predictions.get(i).dynamicTransactions.get(predictions.get(i).dynamicTransactions.size()-1).duration;
+            predictedDurations[i] = predictions.get(i).dynamicTransactions.get(predictions.get(i).dynamicTransactions.size() - 1).duration;
         }
-        for(int i=0;i<realDurations.length;i++)
-        {
-            MAE=MAE+Math.abs(realDurations[i]-predictedDurations[i]);
+        for (int i = 0; i < realDurations.length; i++) {
+            MAE = MAE + Math.abs(realDurations[i] - predictedDurations[i]);
         }
-        MAE=MAE/realDurations.length;
-        return new TestResult(predictions,realDurations,predictedDurations,MAE);
+        MAE = MAE / realDurations.length;
+
+        int numEventInconformities[] = new int[predictions.size()];
+        int timeInconformityDays[] = new int[predictions.size()];
+        for (int i = 0; i < predictions.size(); i++) {
+            for (int j = 0; j < predictions.get(i).staticTransactions.size(); j++) {
+                if (predictions.get(i).staticTransactions.get(j).data[testData.timeIndex].length() == 0) {
+                    if (j > 0) {
+                        String currentEventName = null;
+                        for (int k = j - 1; k > -1; k--) {
+                            currentEventName = predictions.get(i).staticTransactions.get(k).data[testData.eventIndex];
+//                            System.out.println("SEARCHING: "+currentEventName);
+                            if (findEventIndex(currentEventName) > -1) {
+//                                System.out.println("FOUND: "+currentEventName);
+                                break;
+                            } else {
+                                System.out.println("AN INCONFORMITY!!!");
+                                numEventInconformities[i] = numEventInconformities[i] + 1;
+                            }
+                        }
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss.sss");
+                        Date initNetTime = new Date();
+                        Date initTestDataSetTime = new Date();
+                        try {
+                            initNetTime = formatter.parse(myDataSet.myTimedFullCases.get(0).staticTransactions.get(0).data[myDataSet.timeIndex]);
+                            initTestDataSetTime = formatter.parse(predictions.get(i).staticTransactions.get(0).data[testData.timeIndex]);
+                        } catch (ParseException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                        long startTime = initNetTime.getTime();
+                        long endTime = initTestDataSetTime.getTime();
+                        long diffTime = Math.abs(endTime - startTime);
+                        long diffEventDays = diffTime / (1000 * 60 * 60 * 24);
+                        timeInconformityDays[i]=Integer.parseInt(String.valueOf(diffEventDays));//EXPECTING DIFFERENCE TO BE IN INTEGER RANGE
+                    } else {
+                        numEventInconformities[i] = -1;
+                        timeInconformityDays[i] = -1;
+                        System.out.println("NOTHING WAS KNOWN FROM TRANSACTION TO CALCULATE CONFORMITY!");
+                    }
+                    break;
+                }
+            }
+        }
+
+        return new TestResult(predictions, realDurations, predictedDurations, MAE, numEventInconformities, timeInconformityDays);
     }
 
     private FullCase predictFullCase(DataSet testData, FullCase input) {
         String lastEventName = input.staticTransactions.get(input.staticTransactions.size() - 1).data[testData.eventIndex];
         while (!lastEventName.equals("End")) {
             input.staticTransactions.add(predictIterate(testData, input.dynamicTransactions));
-            
+
             input.dynamicTransactions.add(addTransaction(testData, input.staticTransactions.get(input.staticTransactions.size() - 1), input.dynamicTransactions.get(input.dynamicTransactions.size() - 1)));
             lastEventName = input.staticTransactions.get(input.staticTransactions.size() - 1).data[testData.eventIndex];
 //            System.out.println(lastEventName);
@@ -275,8 +320,8 @@ public class SimpleNet implements Serializable{
 
             Event initEvent = events.get(findEventIndex(currentEventName));
             String str = initEvent.arffHeader;
-            
-            str=str+"@DATA"+"\n";
+
+            str = str + "@DATA" + "\n";
 
             for (int i = 0; i < input.get(input.size() - 1).data.length; i++) {
                 if (i != testData.caseIndex && i != testData.eventIndex && i != testData.timeIndex) {
@@ -293,24 +338,21 @@ public class SimpleNet implements Serializable{
 
             int inputIndex = findLinkIndex(lastEventName + "->" + currentEventName);
             if (inputIndex > -1) {
-                for(int i=0;i<initEvent.inputLinks.size();i++)
-                {
-                    if(initEvent.inputLinks.get(i).name.equals(lastEventName + "->" + currentEventName))
-                    {
+                for (int i = 0; i < initEvent.inputLinks.size(); i++) {
+                    if (initEvent.inputLinks.get(i).name.equals(lastEventName + "->" + currentEventName)) {
                         str = str + "Input" + i;
                         break;
                     }
                 }
-                
+
             } else {
                 str = str + "?";
             }
 
             str = str + ",";
             str = str + "?";
-            
-//            System.out.println(str);
 
+//            System.out.println(str);
             InputStream is = new ByteArrayInputStream(str.getBytes());
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -321,21 +363,18 @@ public class SimpleNet implements Serializable{
                 Instances tempDatum = arff.getData();
                 tempDatum.setClass(tempDatum.attribute("Output"));
                 double result;
-                if(initEvent.classifier!=null)
-                {
+                if (initEvent.classifier != null) {
                     result = initEvent.classifier.classifyInstance(tempDatum.get(0));
-                }else{
-                    result=0;
+                } else {
+                    result = 0;
                 }
-                
 
                 String nextStepRaw = tempDatum.attribute("Output").value((int) result);
                 String nextStep[] = nextStepRaw.split("_");
-                
+
 //                System.out.println(nextStepRaw);
 //                System.out.println(nextStep[1]);
 //                System.out.println(nextStep[3]);
-
                 int nextOutputLink = Integer.parseInt(nextStep[1]);
                 int nextOutputCluster = Integer.parseInt(nextStep[3]);
 
@@ -353,13 +392,11 @@ public class SimpleNet implements Serializable{
 //                System.out.println(initEvent.outputLinks.get(nextOutputLink).name);
 //                System.out.println(initEvent.outputLinks.get(nextOutputLink).clusterCentroid.get(nextOutputCluster).data[0]);
                 StaticTransaction output = initEvent.outputLinks.get(nextOutputLink).clusterCentroid.get(nextOutputCluster);
-                output.data[testData.caseIndex]=input.get(0).data[testData.caseIndex];
-                output.data[testData.eventIndex]=initEvent.outputLinks.get(nextOutputLink).name.split("->")[1];
-                for(int i=0;i<output.data.length;i++)
-                {
-                    if(output.data[i].equals("NaN"))
-                    {
-                        output.data[i]="";
+                output.data[testData.caseIndex] = input.get(0).data[testData.caseIndex];
+                output.data[testData.eventIndex] = initEvent.outputLinks.get(nextOutputLink).name.split("->")[1];
+                for (int i = 0; i < output.data.length; i++) {
+                    if (output.data[i].equals("NaN")) {
+                        output.data[i] = "";
                     }
                 }
                 return output;

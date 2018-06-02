@@ -38,7 +38,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
         testPercentSimpleNetSpinner = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        testButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
@@ -65,10 +65,10 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
         jLabel5.setText("50%");
 
-        jButton1.setText("Test");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        testButton.setText("Test");
+        testButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                testButtonActionPerformed(evt);
             }
         });
 
@@ -104,7 +104,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(testButton)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
@@ -144,7 +144,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(testButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -162,7 +162,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
         jLabel5.setText(testSimpleNetSlider.getValue() + "%");
     }//GEN-LAST:event_testSimpleNetSliderStateChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void testButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testButtonActionPerformed
         // TODO add your handling code here:
         TestResult tr = myParent.allData.simpleNet.testModel(myParent.allData.dataSet.randomSample((int) testPercentSimpleNetSpinner.getValue()), testSimpleNetSlider.getValue());
         StringBuilder resultText = new StringBuilder();
@@ -193,12 +193,16 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
             resultText.append("\n");
             resultText.append("Predicted duration: ").append(tr.predictedDurations[i]);
             resultText.append("\n");
+            resultText.append("Case event inconformity: ").append(tr.numEventInconformities[i]);
+            resultText.append("\n");
+            resultText.append("Case time inconformity: ").append(tr.timeInconformityDays[i]);
+            resultText.append("\n");
             resultText.append("%%%");
             resultText.append("\n");
         }
         jTextArea1.setText(resultText.toString());
         jLabel2.setText(String.valueOf(tr.durationMeanAbsoluteError));
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_testButtonActionPerformed
 
     private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
         // TODO add your handling code here:
@@ -218,7 +222,6 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
@@ -229,6 +232,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton testButton;
     private javax.swing.JSpinner testPercentSimpleNetSpinner;
     private javax.swing.JSlider testSimpleNetSlider;
     // End of variables declaration//GEN-END:variables

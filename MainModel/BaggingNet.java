@@ -8,8 +8,6 @@ package MainModel;
 import Data.DataSet;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -30,5 +28,10 @@ public class BaggingNet implements Serializable {
             nets.add(tempNet);
             timedWeights[i]=(((double)(i+1))/(double)dataSets.length);
         }
+    }
+    
+    public TestResult testNet()
+    {
+        return null;//UNDER CONSTRUCTION
     }
 }
