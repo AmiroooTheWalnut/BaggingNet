@@ -17,6 +17,7 @@ public class Transaction implements Serializable{
     public String currentEventName;
     public String nextEventName;
     public int indexId;
+    public boolean isPredicted=false;
     public Transaction(int passed_indexID)
     {
         indexId=passed_indexID;

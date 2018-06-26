@@ -32,16 +32,16 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="testPercentSimpleNetSpinner" min="-2" pref="50" max="-2" attributes="0"/>
+                          <Component id="testPercentSpinner" min="-2" pref="50" max="-2" attributes="0"/>
                       </Group>
                       <Component id="testSimpleNetSlider" alignment="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                  <Component id="isRandomDrawnCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="isSortedByDateCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="isFromBeginCheckBox" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="677" max="32767" attributes="0"/>
@@ -57,14 +57,14 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="testPercentSimpleNetSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="testPercentSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
+                      <Component id="isRandomDrawnCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                      <Component id="isSortedByDateCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                      <Component id="isFromBeginCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -101,10 +101,10 @@
         <Property name="text" type="java.lang.String" value="Known transaction percent:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="testPercentSimpleNetSpinner">
+    <Component class="javax.swing.JSpinner" name="testPercentSpinner">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="20" maximum="99" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="20.0" maximum="99.0" minimum="1.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
         </Property>
       </Properties>
     </Component>
@@ -151,26 +151,26 @@
         <Property name="text" type="java.lang.String" value="No test"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+    <Component class="javax.swing.JCheckBox" name="isRandomDrawnCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Randomly drawn?"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="isRandomDrawnCheckBoxActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox2">
+    <Component class="javax.swing.JCheckBox" name="isSortedByDateCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Sorted by date?"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox3">
+    <Component class="javax.swing.JCheckBox" name="isFromBeginCheckBox">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="From beginnging?"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="isFromBeginCheckBoxActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -29,4 +29,48 @@ public class TestResult implements Serializable{
         numEventInconformities=passed_numEventInconformities;
         timeInconformityDays=passed_timeInconformityDays;
     }
+    
+    public String getRestultsInString()
+    {
+        StringBuilder resultText = new StringBuilder();
+        for (int i = 0; i < this.predictions.size(); i++) {
+            resultText.append("%%%");
+            resultText.append("\n");
+            for (int j = 0; j < this.predictions.get(i).staticTransactions.size(); j++) {
+                if (this.predictions.get(i).staticTransactions.get(j).isPredicted==true) {
+                    for (int k = 0; k < this.predictions.get(i).staticTransactions.get(j).data.length; k++) {
+                        resultText.append(this.predictions.get(i).staticTransactions.get(j).data[k]);
+                        resultText.append(",");
+                    }
+                    resultText.append("Duration: ").append(this.predictions.get(i).staticTransactions.get(j).duration);
+                    resultText.append(",");
+                    resultText.append("*PREDICTED*");
+                } else {
+                    for (int k = 0; k < this.predictions.get(i).staticTransactions.get(j).data.length; k++) {
+                        resultText.append(this.predictions.get(i).staticTransactions.get(j).data[k]);
+                        resultText.append(",");
+                    }
+                    resultText.append("Duration: ").append(this.predictions.get(i).staticTransactions.get(j).duration);
+                    resultText.append(",");
+                    resultText.append("KNOWN");
+                }
+                resultText.append("\n");
+            }
+            resultText.append("Real duration: ").append(this.realDurations[i]);
+            resultText.append("\n");
+            resultText.append("Predicted duration: ").append(this.predictedDurations[i]);
+            resultText.append("\n");
+            resultText.append("Case event inconformity: ").append(this.numEventInconformities[i]);
+            resultText.append("\n");
+            resultText.append("Case time inconformity: ").append(this.timeInconformityDays[i]);
+            resultText.append("\n");
+            resultText.append("%%%");
+            resultText.append("\n");
+            resultText.append("\n");
+            resultText.append("Mean absolute error:");
+            resultText.append(this.durationMeanAbsoluteError);
+        }
+        return resultText.toString();
+    }
+    
 }

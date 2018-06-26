@@ -7,7 +7,11 @@ package MainModel;
 
 import Data.DataSet;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  *
@@ -17,21 +21,33 @@ public class BaggingNet implements Serializable {
 
     DataSet myDataSets[];
     public ArrayList<SimpleNet> nets = new ArrayList();
-    public double timedWeights[];
-    
+    public Date netDates[];
+
     public void trainNet(DataSet dataSets[]) {
-        myDataSets=dataSets;
-        timedWeights=new double[dataSets.length];
+        myDataSets = dataSets;
+        netDates = new Date[dataSets.length];
         for (int i = 0; i < dataSets.length; i++) {
             SimpleNet tempNet = new SimpleNet();
             tempNet.trainNet(dataSets[i]);
             nets.add(tempNet);
-            timedWeights[i]=(((double)(i+1))/(double)dataSets.length);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss.sss");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            Date date = new Date();
+            try {
+                date = formatter.parse(dataSets[i].myTimedFullCases.get(0).staticTransactions.get(0).data[dataSets[i].timeIndex]);
+            } catch (ParseException ex) {
+                System.out.println(ex.getMessage());
+            }
+            netDates[i] = date;
         }
     }
-    
-    public TestResult testNet()
-    {
-        return null;//UNDER CONSTRUCTION
+
+    public TestResult[] testNet(DataSet testData, int knownCasePercent) {
+        TestResult rawResults[] = new TestResult[nets.size()];
+        for (int i = 0; i < nets.size(); i++) {
+            rawResults[i] = nets.get(i).testNet(testData, knownCasePercent);
+        }
+        return rawResults;//UNDER CONSTRUCTION
     }
+
 }

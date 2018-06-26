@@ -66,6 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
         saveData = new javax.swing.JButton();
         loadData = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        dataGeneratorButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         eventsIllustrate = new javax.swing.JButton();
         linksIllustrate = new javax.swing.JButton();
@@ -84,7 +85,7 @@ public class MainFrame extends javax.swing.JFrame {
         testSimpleNetButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        isSortedByDateBaggingNetCheckBox = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
         numFoldsSpinner = new javax.swing.JSpinner();
         trainBaggingNetButton = new javax.swing.JButton();
@@ -93,8 +94,8 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         trainPercentBaggingNetSpinner = new javax.swing.JSpinner();
         testBaggingNetButton = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
+        isRandomTrainBaggingNetCheckBox = new javax.swing.JCheckBox();
+        isFromBeginBaggingNetTrainCheckBox = new javax.swing.JCheckBox();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -164,6 +165,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        dataGeneratorButton.setText("Data generator");
+        dataGeneratorButton.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -177,7 +181,8 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(loadDataButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(saveDataButton))
-                            .addComponent(jButton1))
+                            .addComponent(jButton1)
+                            .addComponent(dataGeneratorButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -228,7 +233,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loadDataKryo)
-                    .addComponent(loadData))
+                    .addComponent(loadData)
+                    .addComponent(dataGeneratorButton))
                 .addContainerGap())
         );
 
@@ -406,8 +412,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Bagging net"));
 
-        jCheckBox3.setSelected(true);
-        jCheckBox3.setText("Sort by first event's date");
+        isSortedByDateBaggingNetCheckBox.setSelected(true);
+        isSortedByDateBaggingNetCheckBox.setText("Sort by first event's date");
 
         jLabel7.setText("Number of folds/nets:");
 
@@ -440,13 +446,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jCheckBox1.setText("Randomly drawn?");
+        isRandomTrainBaggingNetCheckBox.setText("Randomly drawn?");
 
-        jCheckBox2.setSelected(true);
-        jCheckBox2.setText("From beginning?");
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+        isFromBeginBaggingNetTrainCheckBox.setSelected(true);
+        isFromBeginBaggingNetTrainCheckBox.setText("From beginning?");
+        isFromBeginBaggingNetTrainCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+                isFromBeginBaggingNetTrainCheckBoxActionPerformed(evt);
             }
         });
 
@@ -460,11 +466,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
+                        .addComponent(isRandomTrainBaggingNetCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox3)
+                        .addComponent(isSortedByDateBaggingNetCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox2)
+                        .addComponent(isFromBeginBaggingNetTrainCheckBox)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -492,11 +498,11 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox3)
+                    .addComponent(isSortedByDateBaggingNetCheckBox)
                     .addComponent(jLabel3)
                     .addComponent(trainPercentBaggingNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2))
+                    .addComponent(isRandomTrainBaggingNetCheckBox)
+                    .addComponent(isFromBeginBaggingNetTrainCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -671,10 +677,10 @@ public class MainFrame extends javax.swing.JFrame {
             sampledDataSet = allData.dataSet.randomSubSamples((float) trainPercentBaggingNetSpinner.getValue(),(int)numFoldsSpinner.getValue());
             allData.baggingNet.trainNet(sampledDataSet);
         }else{
-            sampledDataSet = allData.dataSet.linearSubSamples((float) trainPercentBaggingNetSpinner.getValue(), (int)numFoldsSpinner.getValue(), !isFromBeginSimpleNetTrainCheckBox.isSelected(),jCheckBox3.isSelected());
+            sampledDataSet = allData.dataSet.linearSubSamples((float) trainPercentBaggingNetSpinner.getValue(), (int)numFoldsSpinner.getValue(), !isFromBeginBaggingNetTrainCheckBox.isSelected(),isSortedByDateBaggingNetCheckBox.isSelected());
             allData.baggingNet.trainNet(sampledDataSet);
         }
-        jLabel6.setText("Model created");
+        jLabel11.setText("Model created");
     }//GEN-LAST:event_trainBaggingNetButtonActionPerformed
 
     private void loadModelKryoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadModelKryoActionPerformed
@@ -748,9 +754,9 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_scenariosIllustrateActionPerformed
 
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+    private void isFromBeginBaggingNetTrainCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isFromBeginBaggingNetTrainCheckBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
+    }//GEN-LAST:event_isFromBeginBaggingNetTrainCheckBoxActionPerformed
 
     private void openBaggingNetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBaggingNetButtonActionPerformed
         // TODO add your handling code here:
@@ -765,7 +771,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void testBaggingNetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testBaggingNetButtonActionPerformed
         // TODO add your handling code here:
-        
+        TestBaggingNetDialog tbnd = new TestBaggingNetDialog(this, true);
+        tbnd.setVisible(true);
     }//GEN-LAST:event_testBaggingNetButtonActionPerformed
 
     private SimpleNet loadSimpleModelSerializable(SimpleNet sn, String file_path, String file_name, String data_type) {
@@ -889,15 +896,16 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton dataGeneratorButton;
     private javax.swing.JButton eventsIllustrate;
+    private javax.swing.JCheckBox isFromBeginBaggingNetTrainCheckBox;
     private javax.swing.JCheckBox isFromBeginSimpleNetTrainCheckBox;
+    private javax.swing.JCheckBox isRandomTrainBaggingNetCheckBox;
     private javax.swing.JCheckBox isRandomTrainSimpleNetCheckBox;
+    private javax.swing.JCheckBox isSortedByDateBaggingNetCheckBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;

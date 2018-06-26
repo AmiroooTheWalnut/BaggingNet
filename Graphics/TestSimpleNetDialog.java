@@ -5,6 +5,7 @@
  */
 package Graphics;
 
+import Data.DataSet;
 import MainModel.TestResult;
 
 /**
@@ -35,7 +36,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
         testSimpleNetSlider = new javax.swing.JSlider();
         jLabel4 = new javax.swing.JLabel();
-        testPercentSimpleNetSpinner = new javax.swing.JSpinner();
+        testPercentSpinner = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         testButton = new javax.swing.JButton();
@@ -43,9 +44,9 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
         jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        isRandomDrawnCheckBox = new javax.swing.JCheckBox();
+        isSortedByDateCheckBox = new javax.swing.JCheckBox();
+        isFromBeginCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -59,7 +60,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
         jLabel4.setText("Known transaction percent:");
 
-        testPercentSimpleNetSpinner.setModel(new javax.swing.SpinnerNumberModel(20, 1, 99, 1));
+        testPercentSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(20.0f), Float.valueOf(1.0f), Float.valueOf(99.0f), Float.valueOf(1.0f)));
 
         jLabel3.setText("Test percent:");
 
@@ -80,20 +81,20 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
         jLabel2.setText("No test");
 
-        jCheckBox1.setText("Randomly drawn?");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        isRandomDrawnCheckBox.setText("Randomly drawn?");
+        isRandomDrawnCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                isRandomDrawnCheckBoxActionPerformed(evt);
             }
         });
 
-        jCheckBox2.setText("Sorted by date?");
+        isSortedByDateCheckBox.setText("Sorted by date?");
 
-        jCheckBox3.setSelected(true);
-        jCheckBox3.setText("From beginnging?");
-        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+        isFromBeginCheckBox.setSelected(true);
+        isFromBeginCheckBox.setText("From beginnging?");
+        isFromBeginCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox3ActionPerformed(evt);
+                isFromBeginCheckBoxActionPerformed(evt);
             }
         });
 
@@ -110,14 +111,14 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel3)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(testPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(testPercentSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(testSimpleNetSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addComponent(jLabel5)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3))
+                    .addComponent(isRandomDrawnCheckBox)
+                    .addComponent(isSortedByDateCheckBox)
+                    .addComponent(isFromBeginCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
                 .addContainerGap())
@@ -130,13 +131,13 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(testPercentSimpleNetSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(testPercentSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox1)
+                        .addComponent(isRandomDrawnCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox2)
+                        .addComponent(isSortedByDateCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox3)
+                        .addComponent(isFromBeginCheckBox)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -164,67 +165,41 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
     private void testButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testButtonActionPerformed
         // TODO add your handling code here:
-        TestResult tr = myParent.allData.simpleNet.testModel(myParent.allData.dataSet.randomSample((int) testPercentSimpleNetSpinner.getValue()), testSimpleNetSlider.getValue());
-        StringBuilder resultText = new StringBuilder();
-        for (int i = 0; i < tr.predictions.size(); i++) {
-            resultText.append("%%%");
-            resultText.append("\n");
-            for (int j = 0; j < tr.predictions.get(i).staticTransactions.size(); j++) {
-                if (tr.predictions.get(i).staticTransactions.get(j).data[myParent.allData.dataSet.timeIndex].length()==0) {
-                    for (int k = 0; k < tr.predictions.get(i).staticTransactions.get(j).data.length; k++) {
-                        resultText.append(tr.predictions.get(i).staticTransactions.get(j).data[k]);
-                        resultText.append(",");
-                    }
-                    resultText.append("Duration: ").append(tr.predictions.get(i).staticTransactions.get(j).duration);
-                    resultText.append(",");
-                    resultText.append("*PREDICTED*");
-                } else {
-                    for (int k = 0; k < tr.predictions.get(i).staticTransactions.get(j).data.length; k++) {
-                        resultText.append(tr.predictions.get(i).staticTransactions.get(j).data[k]);
-                        resultText.append(",");
-                    }
-                    resultText.append("Duration: ").append(tr.predictions.get(i).staticTransactions.get(j).duration);
-                    resultText.append(",");
-                    resultText.append("KNOWN");
-                }
-                resultText.append("\n");
-            }
-            resultText.append("Real duration: ").append(tr.realDurations[i]);
-            resultText.append("\n");
-            resultText.append("Predicted duration: ").append(tr.predictedDurations[i]);
-            resultText.append("\n");
-            resultText.append("Case event inconformity: ").append(tr.numEventInconformities[i]);
-            resultText.append("\n");
-            resultText.append("Case time inconformity: ").append(tr.timeInconformityDays[i]);
-            resultText.append("\n");
-            resultText.append("%%%");
-            resultText.append("\n");
+        TestResult tr=null;
+        DataSet sampledDataSet;
+        if (isRandomDrawnCheckBox.isSelected()) {
+            sampledDataSet = myParent.allData.dataSet.randomSample((float) testPercentSpinner.getValue());
+            tr = myParent.allData.simpleNet.testNet(sampledDataSet, testSimpleNetSlider.getValue());
+        }else{
+            sampledDataSet = myParent.allData.dataSet.linearSample((float) testPercentSpinner.getValue(), !isFromBeginCheckBox.isSelected(),isSortedByDateCheckBox.isSelected());
+            tr = myParent.allData.simpleNet.testNet(sampledDataSet, testSimpleNetSlider.getValue());
         }
-        jTextArea1.setText(resultText.toString());
+        
+        jTextArea1.setText(tr.getRestultsInString());
         jLabel2.setText(String.valueOf(tr.durationMeanAbsoluteError));
     }//GEN-LAST:event_testButtonActionPerformed
 
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+    private void isFromBeginCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isFromBeginCheckBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
+    }//GEN-LAST:event_isFromBeginCheckBoxActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void isRandomDrawnCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isRandomDrawnCheckBoxActionPerformed
         // TODO add your handling code here:
-        if(jCheckBox1.isSelected())
+        if(isRandomDrawnCheckBox.isSelected())
         {
-            jCheckBox2.setEnabled(false);
-            jCheckBox3.setEnabled(false);
+            isSortedByDateCheckBox.setEnabled(false);
+            isFromBeginCheckBox.setEnabled(false);
         }else{
-            jCheckBox2.setEnabled(true);
-            jCheckBox3.setEnabled(true);
+            isSortedByDateCheckBox.setEnabled(true);
+            isFromBeginCheckBox.setEnabled(true);
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_isRandomDrawnCheckBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox isFromBeginCheckBox;
+    private javax.swing.JCheckBox isRandomDrawnCheckBox;
+    private javax.swing.JCheckBox isSortedByDateCheckBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -233,7 +208,7 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton testButton;
-    private javax.swing.JSpinner testPercentSimpleNetSpinner;
+    private javax.swing.JSpinner testPercentSpinner;
     private javax.swing.JSlider testSimpleNetSlider;
     // End of variables declaration//GEN-END:variables
 }

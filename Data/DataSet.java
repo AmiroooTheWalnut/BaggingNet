@@ -60,6 +60,37 @@ public class DataSet implements Serializable {
         return output;
     }
 
+    public DataSet linearSample(double percent, boolean fromEnd, boolean timeSorted) {
+        DataSet output = new DataSet();
+        output.caseIndex = caseIndex;
+        output.eventIndex = eventIndex;
+        output.timeIndex = timeIndex;
+        output.header = header;
+        if (timeSorted == true) {
+            if (fromEnd == false) {
+                for (int i = 0; i < ((float) percent / 100f) * myFullCases.size(); i++) {
+                    output.myFullCases.add(new FullCase(timeIndex, myTimedFullCases.get(i).staticTransactions, myTimedFullCases.get(i).dynamicTransactions));
+                }
+            } else {
+                for (int i = myFullCases.size() - 1; i > Math.round(((float) (100 - percent) / 100f) * myFullCases.size()); i--) {
+                    output.myFullCases.add(new FullCase(timeIndex, myTimedFullCases.get(i).staticTransactions, myTimedFullCases.get(i).dynamicTransactions));
+                }
+            }
+        } else {
+            if (fromEnd == false) {
+                for (int i = 0; i < ((float) percent / 100f) * myFullCases.size(); i++) {
+                    output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(i).staticTransactions, myFullCases.get(i).dynamicTransactions));
+                }
+            } else {
+                for (int i = myFullCases.size() - 1; i > Math.round(((float) (100 - percent) / 100f) * myFullCases.size()); i--) {
+                    output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(i).staticTransactions, myFullCases.get(i).dynamicTransactions));
+                }
+            }
+        }
+        output.myTimedFullCases = DataSetProcessor.extractTimedFullCases(output.myFullCases);
+        return output;
+    }
+
     private DataSet linearSample(double startPrecent, double endPercent, boolean timeSorted) {
         DataSet output = new DataSet();
         output.caseIndex = caseIndex;
@@ -70,7 +101,7 @@ public class DataSet implements Serializable {
             for (int i = (int) (((float) startPrecent / 100f) * myFullCases.size()); i < ((float) endPercent / 100f) * myFullCases.size(); i++) {
                 output.myFullCases.add(new FullCase(timeIndex, myFullCases.get(i).staticTransactions, myFullCases.get(i).dynamicTransactions));
             }
-        }else{
+        } else {
             for (int i = (int) (((float) startPrecent / 100f) * myFullCases.size()); i < ((float) endPercent / 100f) * myFullCases.size(); i++) {
                 output.myFullCases.add(new FullCase(timeIndex, myTimedFullCases.get(i).staticTransactions, myTimedFullCases.get(i).dynamicTransactions));
             }
@@ -100,46 +131,41 @@ public class DataSet implements Serializable {
         }
         return output;
     }
-    
-    public DataSet emptyClone()
-    {
-        DataSet output=new DataSet();
-        output.caseIndex=this.caseIndex;
-        output.eventIndex=this.eventIndex;
-        output.timeIndex=this.timeIndex;
-        output.header=this.header;
-        
+
+    public DataSet emptyClone() {
+        DataSet output = new DataSet();
+        output.caseIndex = this.caseIndex;
+        output.eventIndex = this.eventIndex;
+        output.timeIndex = this.timeIndex;
+        output.header = this.header;
+
         return output;
     }
-    
-    public DataSet deepClone()
-    {
-        DataSet output=new DataSet();
-        output.caseIndex=this.caseIndex;
-        output.eventIndex=this.eventIndex;
-        output.timeIndex=this.timeIndex;
-        output.header=this.header;
-        for(int i=0;i<this.myFullCases.size();i++)
-        {
+
+    public DataSet deepClone() {
+        DataSet output = new DataSet();
+        output.caseIndex = this.caseIndex;
+        output.eventIndex = this.eventIndex;
+        output.timeIndex = this.timeIndex;
+        output.header = this.header;
+        for (int i = 0; i < this.myFullCases.size(); i++) {
             output.myFullCases.add(this.myFullCases.get(i).deepClone());
             output.myTimedFullCases.add(this.myTimedFullCases.get(i).deepClone());
         }
         return output;
     }
-    
-    public DataSet deepClone(int startIndex,int endIndex)
-    {
-        DataSet output=new DataSet();
-        output.caseIndex=this.caseIndex;
-        output.eventIndex=this.eventIndex;
-        output.timeIndex=this.timeIndex;
-        output.header=this.header;
-        for(int i=startIndex;i<endIndex;i++)
-        {
+
+    public DataSet deepClone(int startIndex, int endIndex) {
+        DataSet output = new DataSet();
+        output.caseIndex = this.caseIndex;
+        output.eventIndex = this.eventIndex;
+        output.timeIndex = this.timeIndex;
+        output.header = this.header;
+        for (int i = startIndex; i < endIndex; i++) {
             output.myFullCases.add(this.myFullCases.get(i).deepClone());
             output.myTimedFullCases.add(this.myTimedFullCases.get(i).deepClone());
         }
         return output;
     }
-    
+
 }

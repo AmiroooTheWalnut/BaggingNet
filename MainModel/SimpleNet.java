@@ -210,7 +210,7 @@ public class SimpleNet implements Serializable {
         }
     }
 
-    public TestResult testModel(DataSet testData, int knownCasePercent) {
+    public TestResult testNet(DataSet testData, int knownCasePercent) {
         double MAE = 0;
         double realDurations[] = new double[testData.myFullCases.size()];
         ArrayList<FullCase> predictions = new ArrayList();
@@ -219,6 +219,7 @@ public class SimpleNet implements Serializable {
             ArrayList<StaticTransaction> staticTransactions = new ArrayList();
             ArrayList<DynamicTransaction> dynamicTransactions = new ArrayList();
             for (int j = 0; j < testData.myFullCases.get(i).dynamicTransactions.size() * ((float) knownCasePercent) / (100f); j++) {
+                testData.myFullCases.get(i).staticTransactions.get(j).isPredicted=false;
                 staticTransactions.add(testData.myFullCases.get(i).staticTransactions.get(j));
                 dynamicTransactions.add(testData.myFullCases.get(i).dynamicTransactions.get(j));
             }
@@ -245,12 +246,10 @@ public class SimpleNet implements Serializable {
                         String currentEventName = null;
                         for (int k = j - 1; k > -1; k--) {
                             currentEventName = predictions.get(i).staticTransactions.get(k).data[testData.eventIndex];
-//                            System.out.println("SEARCHING: "+currentEventName);
                             if (findEventIndex(currentEventName) > -1) {
-//                                System.out.println("FOUND: "+currentEventName);
                                 break;
                             } else {
-                                System.out.println("AN INCONFORMITY!!!");
+                                System.out.println("AN INCONFORMITY FOUND!!!");
                                 numEventInconformities[i] = numEventInconformities[i] + 1;
                             }
                         }
@@ -277,7 +276,6 @@ public class SimpleNet implements Serializable {
                 }
             }
         }
-
         return new TestResult(predictions, realDurations, predictedDurations, MAE, numEventInconformities, timeInconformityDays);
     }
 
@@ -310,7 +308,9 @@ public class SimpleNet implements Serializable {
                 terminationTransaction[i] = "End";
             }
             System.out.println("THE TRANSACTIONS DON'T HAVE THE MINIMAL CONFORMITY!!!");
-            return new StaticTransaction("", -1, -1, terminationTransaction);
+            StaticTransaction output=new StaticTransaction("", -1, -1, terminationTransaction);
+            output.isPredicted=true;
+            return output;
         } else {
             if (validEventIndex > 1) {
                 lastEventName = input.get(validEventIndex - 1).data[testData.eventIndex];
@@ -386,6 +386,8 @@ public class SimpleNet implements Serializable {
                         if (!initEvent.outputLinks.get(i).name.split("->")[1].equals(initEvent.name)) {
                             nextOutputLink = i;
                             nextOutputCluster = 0;
+                            System.out.println("Redirected into: "+initEvent.outputLinks.get(i).name.split("->")[1]);
+                            break;
                         }
                     }
                 }
@@ -399,6 +401,7 @@ public class SimpleNet implements Serializable {
                         output.data[i] = "";
                     }
                 }
+                output.isPredicted=true;
                 return output;
             } catch (IOException | NumberFormatException ex) {
                 System.out.println(ex.getMessage());

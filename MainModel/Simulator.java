@@ -49,7 +49,7 @@ public class Simulator {
                 {
                     if(netType.toLowerCase().equals("singlenet"))
                     {
-                        results.add(sn.testModel(fillingDataSet, knownPercent));
+                        results.add(sn.testNet(fillingDataSet, knownPercent));
                         
                     }else if(netType.toLowerCase().equals("baggingnet")){
                         
