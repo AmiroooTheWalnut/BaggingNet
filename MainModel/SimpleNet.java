@@ -10,6 +10,8 @@ import Data.DataSetProcessor;
 import Data.DynamicTransaction;
 import Data.FullCase;
 import Data.StaticTransaction;
+import Esmaieeli.Utilities.TaskThreading.CPUUpperLowerBounds;
+import Esmaieeli.Utilities.TaskThreading.TaskSpreader;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,30 +44,67 @@ public class SimpleNet implements Serializable {
         setLinksData();
     }
 
-    public void trainNet(DataSet dataSet) {
+    public void trainNet(DataSet dataSet, int numProcessingThreads) {
         generateNet(dataSet);
         try {
-            trainLinks();
-            trainEvents();
+            trainLinks(numProcessingThreads);
+            trainEvents(numProcessingThreads);
         } catch (Exception ex) {
             Logger.getLogger(SimpleNet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void trainLinks() throws Exception {
-        for (int i = 0; i < links.size(); i++) {
-            System.out.println("Clustering link: " + links.get(i).name);
-            links.get(i).trainLink(myDataSet);
+    private void trainLinks(int numProcessingThreads) throws Exception {
+        CPUUpperLowerBounds cpuUpperLowerBounds[];
+        cpuUpperLowerBounds = TaskSpreader.spreadTasks(numProcessingThreads, links.size());
+        Thread threads[] = new Thread[numProcessingThreads];
+        for (int i = 0; i < numProcessingThreads; i++) {
+            final int innterI = i;
+            threads[i] = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int j = cpuUpperLowerBounds[innterI].startIndex; j < cpuUpperLowerBounds[innterI].endIndex; j++) {
+                        try {
+                            System.out.println("Clustering link: " + links.get(j).name);
+                            links.get(j).trainLink(myDataSet);
+                        } catch (Exception ex) {
+                            Logger.getLogger(SimpleNet.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            });
+            threads[i].start();
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].join();
         }
     }
 
-    private void trainEvents() throws Exception {
-        for (int i = 0; i < events.size(); i++) {
-            if (!events.get(i).name.equals("Start") && !events.get(i).name.equals("End")) {
-                System.out.println("Training classifer of " + events.get(i).name);
-                events.get(i).trainEvent(myDataSet);
-            }
-
+    private void trainEvents(int numProcessingThreads) throws Exception {
+        CPUUpperLowerBounds cpuUpperLowerBounds[];
+        cpuUpperLowerBounds = TaskSpreader.spreadTasks(numProcessingThreads, events.size());
+        Thread threads[] = new Thread[numProcessingThreads];
+        for (int i = 0; i < numProcessingThreads; i++) {
+            final int innterI = i;
+            threads[i] = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int j = cpuUpperLowerBounds[innterI].startIndex; j < cpuUpperLowerBounds[innterI].endIndex; j++) {
+                        if (!events.get(j).name.equals("Start") && !events.get(j).name.equals("End")) {
+                            try {
+                                System.out.println("Training classifer of " + events.get(j).name);
+                                events.get(j).trainEvent(myDataSet);
+                            } catch (Exception ex) {
+                                Logger.getLogger(SimpleNet.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                }
+            });
+            threads[i].start();
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].join();
         }
     }
 
@@ -211,15 +250,12 @@ public class SimpleNet implements Serializable {
     }
 
     public TestResult testNet(DataSet testData, int knownCasePercent) {
-        double MAE = 0;
-        double realDurations[] = new double[testData.myFullCases.size()];
         ArrayList<FullCase> predictions = new ArrayList();
         for (int i = 0; i < testData.myFullCases.size(); i++) {
-            realDurations[i] = testData.myFullCases.get(i).dynamicTransactions.get(testData.myFullCases.get(i).dynamicTransactions.size() - 1).duration;
             ArrayList<StaticTransaction> staticTransactions = new ArrayList();
             ArrayList<DynamicTransaction> dynamicTransactions = new ArrayList();
             for (int j = 0; j < testData.myFullCases.get(i).dynamicTransactions.size() * ((float) knownCasePercent) / (100f); j++) {
-                testData.myFullCases.get(i).staticTransactions.get(j).isPredicted=false;
+                testData.myFullCases.get(i).staticTransactions.get(j).isPredicted = false;
                 staticTransactions.add(testData.myFullCases.get(i).staticTransactions.get(j));
                 dynamicTransactions.add(testData.myFullCases.get(i).dynamicTransactions.get(j));
             }
@@ -228,14 +264,6 @@ public class SimpleNet implements Serializable {
         for (int i = 0; i < predictions.size(); i++) {
             predictions.set(i, predictFullCase(testData, predictions.get(i)));
         }
-        double predictedDurations[] = new double[predictions.size()];
-        for (int i = 0; i < predictions.size(); i++) {
-            predictedDurations[i] = predictions.get(i).dynamicTransactions.get(predictions.get(i).dynamicTransactions.size() - 1).duration;
-        }
-        for (int i = 0; i < realDurations.length; i++) {
-            MAE = MAE + Math.abs(realDurations[i] - predictedDurations[i]);
-        }
-        MAE = MAE / realDurations.length;
 
         int numEventInconformities[] = new int[predictions.size()];
         int timeInconformityDays[] = new int[predictions.size()];
@@ -266,7 +294,7 @@ public class SimpleNet implements Serializable {
                         long endTime = initTestDataSetTime.getTime();
                         long diffTime = Math.abs(endTime - startTime);
                         long diffEventDays = diffTime / (1000 * 60 * 60 * 24);
-                        timeInconformityDays[i]=Integer.parseInt(String.valueOf(diffEventDays));//EXPECTING DIFFERENCE TO BE IN INTEGER RANGE
+                        timeInconformityDays[i] = Integer.parseInt(String.valueOf(diffEventDays));//EXPECTING DIFFERENCE TO BE IN INTEGER RANGE
                     } else {
                         numEventInconformities[i] = -1;
                         timeInconformityDays[i] = -1;
@@ -276,7 +304,19 @@ public class SimpleNet implements Serializable {
                 }
             }
         }
-        return new TestResult(predictions, realDurations, predictedDurations, MAE, numEventInconformities, timeInconformityDays);
+
+        int sumEventInconformity = 0;
+        int sumTimeInconformity = 0;
+        for (int i = 0; i < numEventInconformities.length; i++) {
+            sumEventInconformity = sumEventInconformity + numEventInconformities[i];
+        }
+        for (int i = 0; i < timeInconformityDays.length; i++) {
+            sumTimeInconformity = sumTimeInconformity + timeInconformityDays[i];
+        }
+        System.out.println("EVENT INCONFORMITY: " + sumEventInconformity);
+        System.out.println("TIME INCONFORMITY: " + sumTimeInconformity);
+
+        return new TestResult(predictions, testData, numEventInconformities, timeInconformityDays);
     }
 
     private FullCase predictFullCase(DataSet testData, FullCase input) {
@@ -308,8 +348,8 @@ public class SimpleNet implements Serializable {
                 terminationTransaction[i] = "End";
             }
             System.out.println("THE TRANSACTIONS DON'T HAVE THE MINIMAL CONFORMITY!!!");
-            StaticTransaction output=new StaticTransaction("", -1, -1, terminationTransaction);
-            output.isPredicted=true;
+            StaticTransaction output = new StaticTransaction("", -1, -1, terminationTransaction);
+            output.isPredicted = true;
             return output;
         } else {
             if (validEventIndex > 1) {
@@ -386,7 +426,7 @@ public class SimpleNet implements Serializable {
                         if (!initEvent.outputLinks.get(i).name.split("->")[1].equals(initEvent.name)) {
                             nextOutputLink = i;
                             nextOutputCluster = 0;
-                            System.out.println("Redirected into: "+initEvent.outputLinks.get(i).name.split("->")[1]);
+                            System.out.println("Redirected into: " + initEvent.outputLinks.get(i).name.split("->")[1]);
                             break;
                         }
                     }
@@ -401,7 +441,7 @@ public class SimpleNet implements Serializable {
                         output.data[i] = "";
                     }
                 }
-                output.isPredicted=true;
+                output.isPredicted = true;
                 return output;
             } catch (IOException | NumberFormatException ex) {
                 System.out.println(ex.getMessage());

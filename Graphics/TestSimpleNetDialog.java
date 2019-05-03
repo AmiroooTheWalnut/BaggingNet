@@ -165,18 +165,18 @@ public class TestSimpleNetDialog extends javax.swing.JDialog {
 
     private void testButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testButtonActionPerformed
         // TODO add your handling code here:
-        TestResult tr=null;
+        TestResult testResults=null;
         DataSet sampledDataSet;
         if (isRandomDrawnCheckBox.isSelected()) {
             sampledDataSet = myParent.allData.dataSet.randomSample((float) testPercentSpinner.getValue());
-            tr = myParent.allData.simpleNet.testNet(sampledDataSet, testSimpleNetSlider.getValue());
+            testResults = myParent.allData.simpleNet.testNet(sampledDataSet, testSimpleNetSlider.getValue());
         }else{
             sampledDataSet = myParent.allData.dataSet.linearSample((float) testPercentSpinner.getValue(), !isFromBeginCheckBox.isSelected(),isSortedByDateCheckBox.isSelected());
-            tr = myParent.allData.simpleNet.testNet(sampledDataSet, testSimpleNetSlider.getValue());
+            testResults = myParent.allData.simpleNet.testNet(sampledDataSet, testSimpleNetSlider.getValue());
         }
         
-        jTextArea1.setText(tr.getRestultsInString());
-        jLabel2.setText(String.valueOf(tr.durationMeanAbsoluteError));
+        jTextArea1.setText(testResults.getRestultsInString());
+        jLabel2.setText(String.valueOf(testResults.durationMeanAbsoluteError));
     }//GEN-LAST:event_testButtonActionPerformed
 
     private void isFromBeginCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isFromBeginCheckBoxActionPerformed

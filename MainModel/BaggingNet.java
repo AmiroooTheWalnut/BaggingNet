@@ -23,12 +23,12 @@ public class BaggingNet implements Serializable {
     public ArrayList<SimpleNet> nets = new ArrayList();
     public Date netDates[];
 
-    public void trainNet(DataSet dataSets[]) {
+    public void trainNet(DataSet dataSets[], int numThreads) {
         myDataSets = dataSets;
         netDates = new Date[dataSets.length];
         for (int i = 0; i < dataSets.length; i++) {
             SimpleNet tempNet = new SimpleNet();
-            tempNet.trainNet(dataSets[i]);
+            tempNet.trainNet(dataSets[i],numThreads);
             nets.add(tempNet);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss.sss");
             formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -46,6 +46,25 @@ public class BaggingNet implements Serializable {
         TestResult rawResults[] = new TestResult[nets.size()];
         for (int i = 0; i < nets.size(); i++) {
             rawResults[i] = nets.get(i).testNet(testData, knownCasePercent);
+            int netSumEventInconformity=0;
+            int netSumTimeInconformity=0;
+            for(int j=0;j<rawResults[i].numEventInconformities.length;j++)
+            {
+                if(rawResults[i].numEventInconformities[j]>-1)
+                {
+                    netSumEventInconformity=netSumEventInconformity+rawResults[i].numEventInconformities[j];
+                }
+            }
+            for(int j=0;j<rawResults[i].timeInconformityDays.length;j++)
+            {
+                if(rawResults[i].timeInconformityDays[j]>-1)
+                {
+                    netSumTimeInconformity=netSumTimeInconformity+rawResults[i].timeInconformityDays[j];
+                }
+            }
+            System.out.println("NET NUM: "+i);
+            System.out.println("EVENT INCONFORMITIES: "+netSumEventInconformity);
+            System.out.println("TIME INCONFORMITIES: "+netSumTimeInconformity);
         }
         return rawResults;//UNDER CONSTRUCTION
     }
